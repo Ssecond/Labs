@@ -128,7 +128,7 @@ namespace Practica18102023
                 jsonWriter.Flush();
 
                 string json = Encoding.UTF8.GetString(memoryStream.ToArray());
-                using (StreamWriter streamWriter = new StreamWriter(logJSONName))
+                using (StreamWriter streamWriter = new StreamWriter(logJSONName + ".json"))
                     streamWriter.Write(json);
             }
             catch (Exception e)
