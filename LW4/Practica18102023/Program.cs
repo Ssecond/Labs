@@ -71,8 +71,8 @@ namespace Practica18102023
 
             ErrorLog errorLog = ErrorLog.Initialize();
             //errorLog.LogTXT(e);
-            errorLog.LogXML(e);
-            //errorLog.LogJSON(e);
+            //errorLog.LogXML(e);
+            errorLog.LogJSON(e);
         }
     }
 }

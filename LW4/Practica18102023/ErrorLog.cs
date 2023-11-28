@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Xml.Linq;
+using System.Text.Json;
 
 namespace Practica18102023
 {
@@ -92,8 +93,51 @@ namespace Practica18102023
                 Console.WriteLine("Stack trace: " + exception.StackTrace);
             }
         }
+
+        private Utf8JsonWriter jsonWriter = null;
+        private MemoryStream memoryStream = null;
+        private string logJSONName;
         internal void LogJSON(Exception exception, string fileName = LOG_NAME_ON_DEFAULT)
-        { }
+        {
+            try
+            {
+                JsonWriterOptions options = new JsonWriterOptions
+                {
+                    Indented = true
+                }; 
+                DateTime currentTime = DateTime.Now;
+                if (jsonWriter == null || memoryStream == null)
+                {
+                    logJSONName += $"{fileName} {currentTime.ToString(DATA_TIME_FILE_FORMAT)}";
+                    memoryStream = new MemoryStream();
+                    jsonWriter = new Utf8JsonWriter(memoryStream, options);
+                    jsonWriter.WriteStartObject();
+                    jsonWriter.WriteString("system_info", GetSystemInfo());
+                }
+                else
+                {
+                    memoryStream = new MemoryStream();
+                    jsonWriter = new Utf8JsonWriter(memoryStream, options);
+                    jsonWriter.WriteStartObject();
+                }
+
+                jsonWriter.WriteString("time", currentTime.ToString());
+                jsonWriter.WriteString("UTC", TimeZoneInfo.Local.GetUtcOffset(DateTime.Now).Hours.ToString("+#;-#;0"));
+                jsonWriter.WriteString("message", exception.Message);
+                jsonWriter.WriteEndObject();
+                jsonWriter.Flush();
+
+                string json = Encoding.UTF8.GetString(memoryStream.ToArray());
+                using (StreamWriter streamWriter = new StreamWriter(logJSONName))
+                    streamWriter.Write(json);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("В процессе логирования ошибки произошла непредвиденная ошибка :(");
+                Console.WriteLine("Message: " + e.Message);
+                Console.WriteLine("Stack trace: " + exception.StackTrace);
+            }
+        }
 
         private string GetSystemInfo()
         {
