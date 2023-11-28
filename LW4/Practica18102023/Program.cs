@@ -6,19 +6,6 @@ namespace Practica18102023
     {
         static void Main(string[] args)
         {
-            const string ERROR_OCCURED = "\nПроизошла ошибка.";
-            /*
-                Задание на лабораторную работу.
-
-                Решение oбычного квадратного уровнения.
-                1) Посчитать дискриминант: > 0; +
-                2) a, b, c читаются с файла; +
-                3) Написать свою кастомную ошибку, если дискременант < 0; +
-                4) Обработать ошибку наличия файла; +
-                5) При парсенге данных с файла попадается текст вместо числа, кастомная ошибка; +
-                6) Если D = 0 => кастомная ошибка, но в текст пишем, что ур-е имеет один корень, без решения его. +
-                7) Ппишем выполнилась ли программа: успешно, не успешно. +
-            */
             Console.Title = "Решение квадратного уровнения";
             Console.WriteLine("Вас приветствует программа, решающая квадратное уравнение.");
             Console.WriteLine("Важно, коофиценты считываются из файла.");
@@ -26,7 +13,7 @@ namespace Practica18102023
             {
                 int[] сoefficients = new int[3];
 
-                StreamReader reader = new StreamReader("Data.txt");
+                StreamReader reader = new StreamReader("Datad.txt");
                 char[] coefCh = { 'a', 'b', 'c' };
                 byte i = 0;
                 Console.WriteLine("В текстовом файле были найдены следующие коофиценты.");
@@ -57,29 +44,35 @@ namespace Practica18102023
             }
             catch (FileNotFoundException e)
             {
-                Console.WriteLine(ERROR_OCCURED);
-                Console.WriteLine(e);
+                ErrorInfoOut(e);
+                ErrorInfoOut(e);
             }
             catch (DiscriminantZero e)
             {
-                Console.WriteLine(ERROR_OCCURED);
-                Console.WriteLine(e);
+                ErrorInfoOut(e);
             }
             catch (DiscriminantLessZeroException e)
             {
-                Console.WriteLine(ERROR_OCCURED);
-                Console.WriteLine(e);
+                ErrorInfoOut(e);
             }
             catch (NotANumberException e)
             {
-                Console.WriteLine(ERROR_OCCURED);
-                Console.WriteLine(e);
+                ErrorInfoOut(e);
             }
             catch (Exception e)
             {
-                Console.WriteLine(ERROR_OCCURED);
-                Console.WriteLine(e);
+                ErrorInfoOut(e);
             }
+        }
+        private static void ErrorInfoOut(Exception e, string errorOccuredMessage = "\nПроизошла ошибка.")
+        {
+            Console.WriteLine(errorOccuredMessage);
+            Console.WriteLine(e);
+
+            ErrorLog errorLog = ErrorLog.Initialize();
+            //errorLog.LogTXT(e);
+            errorLog.LogXML(e);
+            //errorLog.LogJSON(e);
         }
     }
 }
