@@ -45,7 +45,7 @@ namespace Practica18102023
             catch (FileNotFoundException e)
             {
                 ErrorInfoOut(e);
-                // ErrorInfoOut(e);
+                ErrorInfoOut(e);
             }
             catch (DiscriminantZero e)
             {
