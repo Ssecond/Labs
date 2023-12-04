@@ -1,4 +1,5 @@
 using CalculatorLib;
+using System.Diagnostics;
 
 namespace CalculatorTest
 {
@@ -13,42 +14,53 @@ namespace CalculatorTest
             Random rand = new Random();
             a = rand.Next(int.MinValue, int.MaxValue);
             b = rand.Next(int.MinValue, int.MaxValue);
+            Debug.WriteLine("Input data.");
+            Debug.WriteLine("a = " + a);
+            Debug.WriteLine("b = " + b);
         }
         [TestMethod]
         public void TestSumRandom()
         {
             Calculator calculator = new Calculator();
             Random rand = new Random();
-            int expend = a + b;
+            int expected = a + b;
             int actual = calculator.Sum(a, b);
-            Assert.AreEqual(expend, actual);
+            Debug.WriteLine("[Sum] Expected: " + expected);
+            Debug.WriteLine("[Sum] Actual: " + actual);
+            Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void TestMultiplyRandom()
         {
             Calculator calculator = new Calculator();
             Random rand = new Random();
-            int expend = a * b;
+            int expected = a * b;
             int actual = calculator.Multiply(a, b);
-            Assert.AreEqual(expend, actual);
+            Debug.WriteLine("[Multiply] Expected: " + expected);
+            Debug.WriteLine("[Multiply] Actual: " + actual);
+            Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void TestDivideRandom()
         {
             Calculator calculator = new Calculator();
             Random rand = new Random();
-            double expend = (double)a / (double)b;
+            double expected = (double)a / (double)b;
             double actual = calculator.Divide(a, b);
-            Assert.AreEqual(expend, actual);
+            Debug.WriteLine("[Didide] Expected: " + expected);
+            Debug.WriteLine("[Didide] Actual: " + actual);
+            Assert.AreEqual(expected, actual);
         }
         [TestMethod]
         public void TestSubstructRandom()
         {
             Calculator calculator = new Calculator();
             Random rand = new Random();
-            int expend = a - b;
+            int expected = a - b;
             int actual = calculator.Substuct(a, b);
-            Assert.AreEqual(expend, actual);
+            Debug.WriteLine("[Substruct] Expected: " + expected);
+            Debug.WriteLine("[Substruct] Actual: " + actual);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -58,7 +70,10 @@ namespace CalculatorTest
             Calculator calculator = new Calculator();
             Random rand = new Random();
             b = 0;
-            calculator.Divide(a, b);
+            Debug.WriteLine("[DivideByZeroException test] a = " + a);
+            Debug.WriteLine("[DivideByZeroException test] b = " + b);
+            double actual = calculator.Divide(a, b);
+            Debug.WriteLine("[DivideByZeroException test] Actual = " + b);
         }
     }
 }
