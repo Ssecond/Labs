@@ -4,9 +4,9 @@ using System.Diagnostics;
 namespace CalculatorTest
 {
     [TestClass]
-    public class UnitTest1
+    public class CalculatorTest
     {
-        int a, b;
+        private int a, b;
         [TestMethod]
         [TestInitialize]
         public void Initialize()

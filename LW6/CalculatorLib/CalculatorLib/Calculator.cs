@@ -12,7 +12,10 @@
         }
         public double Divide(double a, double b)
         {
-            return a / b;
+            double result = a / b;
+            if (double.IsInfinity(result))
+                throw new DivideByZeroException();
+            return result;
         }
         public int Substuct(int a, int b)
         {
