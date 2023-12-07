@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            int[,] table = Calculate(5, 5, (x, y) => x * y);
+            int[,] table = Calculate(5, 5, (x, y) => x-y);
             PrintTable(table);
         }
         private static void PrintTable(int[,] table, int countDigits = 2)

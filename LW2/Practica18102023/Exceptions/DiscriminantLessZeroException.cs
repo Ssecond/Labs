@@ -1,4 +1,6 @@
-﻿namespace Practica18102023.Exceptions
+﻿using System.Text.Json;
+
+namespace Practica18102023.Exceptions
 {
     internal class DiscriminantLessZeroException : Exception
     {
