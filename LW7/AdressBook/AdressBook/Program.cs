@@ -25,13 +25,22 @@ namespace AdressBook
                         break;
                     case "list":
                         if (adressBook.Count != 0)
-                            foreach (AdressBookRecord bookRecord in adressBook)
-                                Console.WriteLine(bookRecord.ToString());
+                            for (int i = 0; i < adressBook.Count; i++)
+                            {
+                                Console.WriteLine("ID: " + (i + 1).ToString());
+                                Console.WriteLine(adressBook[i].ToString());
+                            }
                         else
                             Console.WriteLine("Телефонная книга пуста.");
                         break;
                     case "add":
-                        adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], command[5]));
+                        if (command.Length == 1 + 6)
+                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], command[5], command[5].ToLower() == "да" ? true : false));
+                        else if (command.Length == 1 + 5)
+                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], command[5]));
+                        break;
+                    case "delete":
+                        adressBook.RemoveAt(int.Parse(command[1]) - 1);
                         break;
                     default:
                         if (command[0].ToLower() != "exit")
@@ -49,8 +58,6 @@ namespace AdressBook
                 string buffer = string.Empty;
                 if (command[i] != '"')
                 {
-                    if (i != 0) // only if it's not the beginning of the string, to prevent spaces from being added to the beginning of the command.
-                        i++;
                     do
                     {
                         buffer += command[i++];
@@ -71,6 +78,7 @@ namespace AdressBook
                             buffer += command[i++];
                     }
                     while (command[i] != '"');
+                    i++; // to prevent spaces from being added to the beginning of the command
                 }
                 commands.Add(buffer);
                 i++;

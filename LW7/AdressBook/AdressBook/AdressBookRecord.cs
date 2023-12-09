@@ -20,7 +20,7 @@
         internal void UnBlock() => isBlocked = false;
         public override string ToString()
         {
-            return string.Format("ФИО: {0} {1} {2}\nТелефон: {3}\nEmail: {4}\nЗаблокирован: {5}", name, surname, patronimic, phoneNumber, email, isBlocked ? "Да" : "Нет");
+            return string.Format("ФИО: {0} {1} {2}\nТелефон: {3}\nEmail: {4}\nЗаблокирован: {5}", surname, name, patronimic, phoneNumber, email, isBlocked ? "да" : "нет");
         }
     }
 }
