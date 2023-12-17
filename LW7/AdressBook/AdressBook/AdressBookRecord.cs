@@ -16,6 +16,15 @@
             this.email = email;
             this.isBlocked = isBlocked;
         }
+        public void ChangeTo(string name, string surname, string patronimic, string phoneNumber, string email, bool isBlocked = false)
+        {
+            this.name = name;
+            this.surname = surname;
+            this.patronimic = patronimic;
+            this.phoneNumber = phoneNumber;
+            this.email = email;
+            this.isBlocked = isBlocked;
+        }
         internal void Block() => isBlocked = true;
         internal void UnBlock() => isBlocked = false;
         public override string ToString()

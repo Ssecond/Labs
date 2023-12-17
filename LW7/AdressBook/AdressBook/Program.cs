@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace AdressBook
@@ -41,6 +42,12 @@ namespace AdressBook
                         break;
                     case "delete":
                         adressBook.RemoveAt(int.Parse(command[1]) - 1);
+                        break;
+                    case "change":
+                        if (command.Length == 1 + 7)
+                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], command[6], command[7].ToLower() == "да" ? true : false);
+                        else if (command.Length == 1 + 6)
+                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], command[6]);
                         break;
                     default:
                         if (command[0].ToLower() != "exit")
