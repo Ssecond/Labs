@@ -1,15 +1,16 @@
-﻿using System.Net.Mail;
+﻿using PhoneNumbers;
+using System.Net.Mail;
 
 namespace AdressBook
 {
     internal class AdressBookRecord
     {
         private string name, surname, patronimic;
-        private string phoneNumber;
+        private PhoneNumber phoneNumber;
         private MailAddress email;
         private bool isBlocked;
 
-        public AdressBookRecord(string name, string surname, string patronimic, string phoneNumber, MailAddress email, bool isBlocked = false)
+        public AdressBookRecord(string name, string surname, string patronimic, PhoneNumber phoneNumber, MailAddress email, bool isBlocked = false)
         {
             this.name = name;
             this.surname = surname;
@@ -18,7 +19,7 @@ namespace AdressBook
             this.email = email;
             this.isBlocked = isBlocked;
         }
-        public void ChangeTo(string name, string surname, string patronimic, string phoneNumber, MailAddress email, bool isBlocked = false)
+        public void ChangeTo(string name, string surname, string patronimic, PhoneNumber phoneNumber, MailAddress email, bool isBlocked = false)
         {
             this.name = name;
             this.surname = surname;
@@ -31,7 +32,8 @@ namespace AdressBook
         internal void UnBlock() => isBlocked = false;
         public override string ToString()
         {
-            return string.Format("ФИО: {0} {1} {2}\nТелефон: {3}\nEmail: {4}\nЗаблокирован: {5}", surname, name, patronimic, phoneNumber, email, isBlocked ? "да" : "нет");
+            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            return string.Format("ФИО: {0} {1} {2}\nТелефон: {3}\nEmail: {4}\nЗаблокирован: {5}", surname, name, patronimic, phoneNumberUtil.Format(phoneNumber, PhoneNumberFormat.INTERNATIONAL), email, isBlocked ? "да" : "нет");
         }
     }
 }

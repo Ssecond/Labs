@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PhoneNumbers;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using System.Text;
 using static System.Reflection.Metadata.BlobBuilder;
@@ -22,33 +23,19 @@ namespace AdressBook
                 switch (command[0].ToLower())
                 {
                     case "help":
-                        using (StreamReader streamReader = new StreamReader("help.txt", Encoding.UTF8))
-                            Console.WriteLine(streamReader.ReadToEnd());
+                        GetHelp();
                         break;
                     case "list":
-                        if (adressBook.Count != 0)
-                            for (int i = 0; i < adressBook.Count; i++)
-                            {
-                                Console.WriteLine("ID: " + (i + 1).ToString());
-                                Console.WriteLine(adressBook[i].ToString());
-                            }
-                        else
-                            Console.WriteLine("Телефонная книга пуста.");
+                        ListOut(adressBook);
                         break;
                     case "add":
-                        if (command.Length == 1 + 6)
-                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], new MailAddress(command[5]), command[5].ToLower() == "да" ? true : false));
-                        else if (command.Length == 1 + 5)
-                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], new MailAddress(command[5])));
+                        Add(adressBook, command);
                         break;
                     case "delete":
                         adressBook.RemoveAt(int.Parse(command[1]) - 1);
                         break;
                     case "change":
-                        if (command.Length == 1 + 7)
-                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], new MailAddress(command[6]), command[7].ToLower() == "да" ? true : false);
-                        else if (command.Length == 1 + 6)
-                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], new MailAddress(command[6]));
+                        Change(adressBook, command);
                         break;
                     default:
                         if (command[0].ToLower() != "exit")
@@ -57,6 +44,47 @@ namespace AdressBook
                 }
             } while (command[0] != "exit");
         }
+
+        private static void GetHelp()
+        {
+            using (StreamReader streamReader = new StreamReader("help.txt", Encoding.UTF8))
+                Console.WriteLine(streamReader.ReadToEnd());
+        }
+
+        private static void ListOut(List<AdressBookRecord> adressBook)
+        {
+            if (adressBook.Count != 0)
+                for (int i = 0; i < adressBook.Count; i++)
+                {
+                    Console.WriteLine("ID: " + (i + 1).ToString());
+                    Console.WriteLine(adressBook[i].ToString());
+                }
+            else
+                Console.WriteLine("Телефонная книга пуста.");
+        }
+
+        private static void Change(List<AdressBookRecord> adressBook, string[] command)
+        {
+            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            if (command.Length == 1 + 7 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[5], "RU")))
+                adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], phoneNumberUtil.Parse(command[5], "RU"), new MailAddress(command[6]), command[7].ToLower() == "да" ? true : false);
+            else if (command.Length == 1 + 6 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[5], "RU")))
+                adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], phoneNumberUtil.Parse(command[5], "RU"), new MailAddress(command[6]));
+            else
+                Console.WriteLine("Неудачно, повторите попытку.");
+        }
+
+        private static void Add(List<AdressBookRecord> adressBook, string[] command)
+        {
+            PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.GetInstance();
+            if (command.Length == 1 + 6 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[4], "RU")))
+                adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], phoneNumberUtil.Parse(command[4], "RU"), new MailAddress(command[5]), command[5].ToLower() == "да" ? true : false));
+            else if (command.Length == 1 + 5 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[4], "RU")))
+                adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], phoneNumberUtil.Parse(command[4], "RU"), new MailAddress(command[5])));
+            else
+                Console.WriteLine("Неудачно, повторите попытку.");
+        }
+
         static string[] Split(string command)
         {
             List<string> commands = new List<string>();
