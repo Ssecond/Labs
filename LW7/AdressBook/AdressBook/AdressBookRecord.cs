@@ -1,13 +1,15 @@
-﻿namespace AdressBook
+﻿using System.Net.Mail;
+
+namespace AdressBook
 {
     internal class AdressBookRecord
     {
         private string name, surname, patronimic;
         private string phoneNumber;
-        private string email;
+        private MailAddress email;
         private bool isBlocked;
 
-        public AdressBookRecord(string name, string surname, string patronimic, string phoneNumber, string email, bool isBlocked = false)
+        public AdressBookRecord(string name, string surname, string patronimic, string phoneNumber, MailAddress email, bool isBlocked = false)
         {
             this.name = name;
             this.surname = surname;
@@ -16,7 +18,7 @@
             this.email = email;
             this.isBlocked = isBlocked;
         }
-        public void ChangeTo(string name, string surname, string patronimic, string phoneNumber, string email, bool isBlocked = false)
+        public void ChangeTo(string name, string surname, string patronimic, string phoneNumber, MailAddress email, bool isBlocked = false)
         {
             this.name = name;
             this.surname = surname;

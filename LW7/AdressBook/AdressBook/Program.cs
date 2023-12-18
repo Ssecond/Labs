@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 using System.Text;
 using static System.Reflection.Metadata.BlobBuilder;
 
@@ -36,18 +37,18 @@ namespace AdressBook
                         break;
                     case "add":
                         if (command.Length == 1 + 6)
-                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], command[5], command[5].ToLower() == "да" ? true : false));
+                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], new MailAddress(command[5]), command[5].ToLower() == "да" ? true : false));
                         else if (command.Length == 1 + 5)
-                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], command[5]));
+                            adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], command[4], new MailAddress(command[5])));
                         break;
                     case "delete":
                         adressBook.RemoveAt(int.Parse(command[1]) - 1);
                         break;
                     case "change":
                         if (command.Length == 1 + 7)
-                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], command[6], command[7].ToLower() == "да" ? true : false);
+                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], new MailAddress(command[6]), command[7].ToLower() == "да" ? true : false);
                         else if (command.Length == 1 + 6)
-                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], command[6]);
+                            adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], command[5], new MailAddress(command[6]));
                         break;
                     default:
                         if (command[0].ToLower() != "exit")
