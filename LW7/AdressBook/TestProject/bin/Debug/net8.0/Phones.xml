@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<testdata>
+	<testcase>
+		<phoneNumber>+7 909 754 62 31</phoneNumber>
+	</testcase>
+	<testcase>
+		<phoneNumber>87663</phoneNumber>
+	</testcase>
+  <testcase>
+		<phoneNumber>mamail.ru</phoneNumber>
+	</testcase>
+  <testcase>
+		<phoneNumber>+7 908 744 62 31</phoneNumber>
+	</testcase>
+</testdata>
+

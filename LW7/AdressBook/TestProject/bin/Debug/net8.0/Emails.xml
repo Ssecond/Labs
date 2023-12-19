@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<testdata>
+	<testcase>
+		<email>mail@mail.ru</email>
+	</testcase>
+	<testcase>
+		<email>capy@</email>
+	</testcase>
+  <testcase>
+		<email>mamail.ru</email>
+	</testcase>
+  <testcase>
+		<email>+7a</email>
+	</testcase>
+</testdata>
+

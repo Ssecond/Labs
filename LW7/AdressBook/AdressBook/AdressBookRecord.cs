@@ -3,7 +3,7 @@ using System.Net.Mail;
 
 namespace AdressBook
 {
-    internal class AdressBookRecord
+    public class AdressBookRecord
     {
         private string name, surname, patronimic;
         private PhoneNumber phoneNumber;
