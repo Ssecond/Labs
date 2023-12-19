@@ -1,4 +1,5 @@
 ﻿using PhoneNumbers;
+using Practica18102023;
 using System.Net.Mail;
 using System.Text;
 
@@ -6,8 +7,12 @@ namespace AdressBook
 {
     public class Program
     {
+        private static ErrorLog errorLogger;
+
         static void Main(string[] args)
         {
+            errorLogger = ErrorLog.Initialize();
+            errorLogger.LogWrite("Программа запустилась.");
             Console.Title = "Телефонная книга";
             List<AdressBookRecord> adressBook = new List<AdressBookRecord>();
             Console.WriteLine("Вас приветсвует программа «Телефонная книга»");
@@ -37,10 +42,14 @@ namespace AdressBook
                         break;
                     default:
                         if (command[0].ToLower() != "exit")
+                        {
                             Console.WriteLine("Неверная команда. Напишите \"help\" для помощи.");
+                            errorLogger.LogWrite($"Введена неверная команда ({command[0].ToLower()}).");
+                        }
                         break;
                 }
             } while (command[0] != "exit");
+            errorLogger.LogWrite("Работа программы успешно завершена командой \"exit\".");
         }
 
         public static void Delete(List<AdressBookRecord> adressBook, string[] command)
@@ -48,14 +57,17 @@ namespace AdressBook
             try
             {
                 adressBook.RemoveAt(int.Parse(command[1]) - 1);
+                errorLogger.LogWrite($"Запись (ID = {command[1]}) удалена.");
             }
             catch (FormatException e)
             {
                 Console.WriteLine("Не то ввёл, переделывай.");
+                errorLogger.LogWrite(e);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Вот тут уже не понятно что произошло. Разбирайся: " + e.Message);
+                errorLogger.LogWrite(e);
             }
         }
 
@@ -67,14 +79,23 @@ namespace AdressBook
 
         public static void ListOut(List<AdressBookRecord> adressBook)
         {
-            if (adressBook.Count != 0)
-                for (int i = 0; i < adressBook.Count; i++)
-                {
-                    Console.WriteLine("ID: " + (i + 1).ToString());
-                    Console.WriteLine(adressBook[i].ToString());
-                }
-            else
-                Console.WriteLine("Телефонная книга пуста.");
+            try
+            {
+                if (adressBook.Count != 0)
+                    for (int i = 0; i < adressBook.Count; i++)
+                    {
+                        Console.WriteLine("ID: " + (i + 1).ToString());
+                        Console.WriteLine(adressBook[i].ToString());
+                    }
+                else
+                    Console.WriteLine("Телефонная книга пуста.");
+                errorLogger.LogWrite("Лист выведен в консоль командой \"list\".");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Вот тут уже не понятно что произошло. Разбирайся: " + e.Message);
+                errorLogger.LogWrite(e);
+            }
         }
 
         public static void Change(List<AdressBookRecord> adressBook, string[] command)
@@ -89,18 +110,26 @@ namespace AdressBook
                     else if (command.Length == 1 + 6 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[5], "RU")))
                         adressBook[int.Parse(command[1]) - 1].ChangeTo(command[2], command[3], command[4], phoneNumberUtil.Parse(command[5], "RU"), new MailAddress(command[6]));
                     else
+                    {
                         Console.WriteLine("Неудачно, повторите попытку.");
+                        errorLogger.LogWrite($"Неудачная попытка изменить запись (ID = {command[1]}).");
+                    }
                 }
                 else
+                {
                     Console.WriteLine("Неудачно, повторите попытку.");
+                    errorLogger.LogWrite($"Неудачная попытка изменить запись (ID = {command[1]}).");
+                }
             }
             catch (NumberParseException e)
             {
                 Console.WriteLine("Неудачно, повторите попытку.");
+                errorLogger.LogWrite(e);
             }
             catch (FormatException e)
             {
                 Console.WriteLine("Неудачно, повторите попытку.");
+                errorLogger.LogWrite(e);
             }
 
         }
@@ -117,18 +146,26 @@ namespace AdressBook
                     else if (command.Length == 1 + 5 && phoneNumberUtil.IsValidNumber(phoneNumberUtil.Parse(command[4], "RU")))
                         adressBook.Add(new AdressBookRecord(command[1], command[2], command[3], phoneNumberUtil.Parse(command[4], "RU"), new MailAddress(command[5])));
                     else
+                    {
                         Console.WriteLine("Неудачно, повторите попытку.");
+                        errorLogger.LogWrite($"Неудачная попытка добавить запись.");
+                    }
                 }
                 else
+                {
                     Console.WriteLine("Неудачно, повторите попытку.");
+                    errorLogger.LogWrite($"Неудачная попытка добавить запись.");
+                }
             }
             catch (NumberParseException e)
             {
                 Console.WriteLine("Неудачно, повторите попытку.");
+                errorLogger.LogWrite(e);
             }
             catch (FormatException e)
             {
                 Console.WriteLine("Неудачно, повторите попытку.");
+                errorLogger.LogWrite(e);
             }
         }
         public static bool StartsWithUppercase(string input)
