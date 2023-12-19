@@ -55,7 +55,7 @@ namespace TestProject
         }
         [TestMethod]
         [DynamicData(nameof(Emails), DynamicDataSourceType.Property)]
-        public void IfTheNameSurnamePAtronimicStartsWithUpperCase(string email)
+        public void EmailFormatCheck(string email)
         {
             try
             {
