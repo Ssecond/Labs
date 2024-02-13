@@ -15,11 +15,11 @@
                 if (streamWriter == null)
                 {
                     logTXTName += $"{fileName} {currentTime.ToString(DATA_TIME_FILE_FORMAT)}";
-                    streamWriter = new StreamWriter(logTXTName + ".txt", false);
+                    streamWriter = new StreamWriter(logTXTName + ".log", false);
                     streamWriter.WriteLine("Название приложения: " + AppDomain.CurrentDomain.FriendlyName);
                 }
                 else
-                    streamWriter = new StreamWriter(logTXTName + ".txt", true);
+                    streamWriter = new StreamWriter(logTXTName + ".log", true);
 
                 streamWriter.WriteLine($"[{currentTime}, UTC {TimeZoneInfo.Local.GetUtcOffset(currentTime).Hours.ToString("+#;-#;0")}] {text}");
             }
