@@ -6,21 +6,27 @@ namespace LW1
     internal class Program
     {
         static Logger logger = new Logger();
+        static bool stepLog = true;
         static void Main(string[] args)
         {
             int[] testArray;
             RandomFillArray(out testArray, 10_000);
-            logger.Log("Original array." + "\n\t" + ArrayToPrintString(testArray));
-            BubleSort(testArray);
+            logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(testArray));
+            Stopwatch timeCountner = Stopwatch.StartNew();
+            logger.Log($"Сортировка начата.");
+            //BubleSort(testArray);
+            //MergeSort(testArray);
+            ShakeSort(testArray);
+            timeCountner.Stop();
+            logger.Log($"Сортировка окончена. Времени затрачено: {timeCountner.ElapsedMilliseconds} milliseconds.");
+            logger.Log($"Отсортированный массив.\n\t" + ArrayToPrintString(testArray));
         }
         static void RandomFillArray(out int[] nums, long length)
         { 
             nums = new int[length];
             Random random = new Random();
             for (long i = 0; i < length; i++)
-            {
                 nums[i] = random.Next();
-            }
         }
         static string ArrayToPrintString(int[] nums, long startIndex = 0, long endIndex = -1)
         {
@@ -35,17 +41,14 @@ namespace LW1
         }
         static void BubleSort(int[] nums)
         {
-            Stopwatch timeCountner = Stopwatch.StartNew();
-            logger.Log($"Buble sort started!");
-            for (int write = 0; write < nums.Length; write++)
-                for (int sort = 0; sort < nums.Length - 1; sort++)
-                    if (nums[sort] > nums[sort + 1])
+            for (int i = 0; i < nums.Length; i++)
+                for (int j = 0; j < nums.Length - 1; j++)
+                    if (nums[j] > nums[j + 1])
                     {
-                        Swap(ref nums[sort + 1], ref nums[sort]);
-                        logger.Log($"Compared: {nums[sort + 1]} and {nums[sort]}..." + "\n\tArray: " + ArrayToPrintString(nums));
+                        Swap(ref nums[j + 1], ref nums[j]);
+                        if (stepLog)
+                            logger.Log($"Сравнены: {nums[j + 1]} и {nums[j]}..." + "\n\tСостояние массива: " + ArrayToPrintString(nums));
                     }
-            timeCountner.Stop();
-            logger.Log($"Buble sort's done. Time spent: {timeCountner.ElapsedMilliseconds} milliseconds.");
         }
         static void Swap(ref int firstVar, ref int secondVar)
         {
@@ -58,7 +61,8 @@ namespace LW1
             if (l < r)
             {
                 int m = (l + r) / 2;
-                logger.Log("Array is divided by 2 blocks." + "\n\tI. " + ArrayToPrintString(nums, l, m) + "\n\tII. " + ArrayToPrintString(nums, m + 1, r));
+                if (stepLog)
+                    logger.Log("Массив поделён на два след. блока." + "\n\tI. " + ArrayToPrintString(nums, l, m) + "\n\tII. " + ArrayToPrintString(nums, m + 1, r));
                 MergeSortImpl(nums, buffer, l, m);
                 MergeSortImpl(nums, buffer, m + 1, r);
 
@@ -80,15 +84,44 @@ namespace LW1
                 for (int i = l; i <= r; ++i)
                     nums[i] = buffer[i];
             }
-            logger.Log("Result of sorting the current block: " + ArrayToPrintString(nums, l, r));
+            if (stepLog)
+                logger.Log("Результат сортировки текущего блока: " + ArrayToPrintString(nums, l, r));
         }
 
         static void MergeSort(int[] nums)
         {
-            Stopwatch timeCountner = Stopwatch.StartNew();
             int[] buffer = new int[nums.Length];
             MergeSortImpl(nums, buffer, 0, nums.Length - 1);
-            logger.Log($"Merge sort's done. Time spent: {timeCountner.ElapsedMilliseconds} milliseconds.");
+        }
+
+        static void ShakeSort(int[] nums)
+        {
+            for (long i = 0; i < nums.Length / 2; i++)
+            {
+                bool swapHappened = false;
+                // Проход слева направо
+                for (long j = i; j < nums.Length - i - 1; j++)
+                    if (nums[j] > nums[j + 1])
+                    {
+                        Swap(ref nums[j], ref nums[j + 1]);
+                        swapHappened = true;
+                        if (stepLog)
+                            logger.Log($"Сравнены: {nums[j + 1]} и {nums[j]}..." + "\n\tСостояние массива: " + ArrayToPrintString(nums));
+                    }
+
+                // Проход справа налево
+                for (long j = nums.Length - 2 - i; j > i; j--)
+                    if (nums[j - 1] > nums[j])
+                    {
+                        Swap(ref nums[j - 1], ref nums[j]);
+                        swapHappened = true;
+                        if (stepLog)
+                            logger.Log($"Сравнены: {nums[j + 1]} и {nums[j]}..." + "\n\tСостояние массива: " + ArrayToPrintString(nums));
+                    }
+
+                if (!swapHappened)
+                    break;
+            }
         }
     }
 }
