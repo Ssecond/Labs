@@ -10,15 +10,14 @@ namespace LW1
         static void Main(string[] args)
         {
             int[] originalNums;
-            RandomFillArray(out originalNums, 1000);
-            if (stepLog)
-                logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(originalNums));
 
             int[] countOfElements = [100, 1_000, 10_000, 100_000, 1_000_000];
             for (int i = 0; i < countOfElements.Length; i++)
             {
                 logger.Log($"Тест сортировок на {countOfElements[i]} элементов начат.");
                 RandomFillArray(out originalNums, countOfElements[i]);
+                if (stepLog)
+                    logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(originalNums));
 
                 CountTimeToSortBy(originalNums, BubleSort, "пузырьком");
                 CountTimeToSortBy(originalNums, ShakeSort, "шейкером");
