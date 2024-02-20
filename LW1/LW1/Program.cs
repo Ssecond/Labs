@@ -1,28 +1,48 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace LW1
 {
     internal class Program
     {
         static Logger logger = new Logger();
-        static bool stepLog = true;
+        static bool stepLog = false;
         static void Main(string[] args)
         {
-            int[] testArray;
-            RandomFillArray(out testArray, 10_000);
-            logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(testArray));
-            Stopwatch timeCountner = Stopwatch.StartNew();
-            logger.Log($"Сортировка начата.");
-            //BubleSort(testArray);
-            //MergeSort(testArray);
-            ShakeSort(testArray);
-            timeCountner.Stop();
-            logger.Log($"Сортировка окончена. Времени затрачено: {timeCountner.ElapsedMilliseconds} milliseconds.");
-            logger.Log($"Отсортированный массив.\n\t" + ArrayToPrintString(testArray));
+            int[] originalNums;
+            RandomFillArray(out originalNums, 1000);
+            if (stepLog)
+                logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(originalNums));
+
+            int[] countOfElements = [100, 1_000, 10_000, 100_000, 1_000_000];
+            for (int i = 0; i < countOfElements.Length; i++)
+            {
+                logger.Log($"Тест сортировок на {countOfElements[i]} элементов начат.");
+                RandomFillArray(out originalNums, countOfElements[i]);
+
+                CountTimeToSortBy(originalNums, BubleSort, "пузырьком");
+                CountTimeToSortBy(originalNums, ShakeSort, "шейкером");
+                CountTimeToSortBy(originalNums, BinaryTreeSort, "бинарным деревом");
+                CountTimeToSortBy(originalNums, MergeSort, "слиянием");
+
+                logger.Log($"Тест сортировок на {countOfElements[i]} элементов закончен.\n" + new string('-', 20));
+            }
         }
+        delegate void SortMethod(int[] nums);
+        private static void CountTimeToSortBy(int[] nums, SortMethod sortMethod, string sortName = "")
+        {
+            int[] copyNumsToSort = new int[nums.Length];
+            Array.Copy(nums, copyNumsToSort, nums.Length);
+
+            logger.Log($"Сортировка {sortName} начата.");
+            Stopwatch timeCountner = Stopwatch.StartNew();
+            sortMethod.Invoke(copyNumsToSort);
+            timeCountner.Stop();
+            logger.Log($"Сортировка {sortName} окончена. Времени затрачено: {timeCountner.ElapsedMilliseconds} миллисекунд.");
+            if (stepLog)
+                logger.Log($"Отсортированный массив.\n\t" + ArrayToPrintString(copyNumsToSort));
+        }
+
         static void RandomFillArray(out int[] nums, long length)
         {
             nums = new int[length];
@@ -127,14 +147,12 @@ namespace LW1
             }
         }
 
-        public static void BinaryTreeSort(int[] nums)
+        static void BinaryTreeSort(int[] nums)
         {
             Stopwatch timeCountner = Stopwatch.StartNew();
             TreeNode treeNode = new TreeNode(nums[0]);
             for (int i = 1; i < nums.Length; i++)
                 treeNode.Insert(new TreeNode(nums[i]));
-
-            logger.Log($"Binary tree sort's done. Time spent: {timeCountner.ElapsedMilliseconds} milliseconds.");
             nums = treeNode.Transform();
         }
     }
