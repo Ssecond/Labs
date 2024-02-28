@@ -20,6 +20,7 @@ namespace LW1
                     logger.Log("Изначальное состояние массива." + "\n\t" + ArrayToPrintString(originalNums));
 
                 CountTimeToSortBy(originalNums, BubleSort, "пузырьком");
+                CountTimeToSortBy(originalNums, BubleSortEnhanced, "улучшенным пузырьком");
                 CountTimeToSortBy(originalNums, ShakeSort, "шейкером");
                 CountTimeToSortBy(originalNums, BinaryTreeSort, "бинарным деревом");
                 CountTimeToSortBy(originalNums, MergeSort, "слиянием");
@@ -72,6 +73,23 @@ namespace LW1
                             logger.Log($"Сравнены: {nums[j + 1]} и {nums[j]}..." + "\n\tСостояние массива: " + ArrayToPrintString(nums));
                     }
         }
+        static void BubleSortEnhanced(int[] nums)
+        {
+            bool swapHappened = true;
+            while (swapHappened)
+            {
+                swapHappened = false;
+                for (int j = 0; j < nums.Length - 1; j++)
+                    if (nums[j] > nums[j + 1])
+                    {
+                        Swap(ref nums[j + 1], ref nums[j]);
+                        swapHappened = true;
+                        if (stepLog)
+                            logger.Log($"Сравнены: {nums[j + 1]} и {nums[j]}..." + "\n\tСостояние массива: " + ArrayToPrintString(nums));
+                    }
+            }
+        }
+
         static void Swap(ref int firstVar, ref int secondVar)
         {
             int buff = firstVar;
@@ -148,7 +166,6 @@ namespace LW1
 
         static void BinaryTreeSort(int[] nums)
         {
-            Stopwatch timeCountner = Stopwatch.StartNew();
             TreeNode treeNode = new TreeNode(nums[0]);
             for (int i = 1; i < nums.Length; i++)
                 treeNode.Insert(new TreeNode(nums[i]));
@@ -157,16 +174,13 @@ namespace LW1
     }
     public class TreeNode
     {
-
         public TreeNode(int data)
         {
             Data = data;
         }
 
         public int Data { get; set; }
-
         public TreeNode Left { get; set; }
-
         public TreeNode Right { get; set; }
 
         public void Insert(TreeNode node)
